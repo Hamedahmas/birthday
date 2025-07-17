@@ -1,154 +1,191 @@
 <!DOCTYPE html>
-<html lang="fa">
+<html lang="fa" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <title>🎁 هدیه تولد Roya</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <title>تولدت مبارک رویا</title>
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0 }
     body {
-      font-family: 'Vazirmatn', sans-serif;
-      background: linear-gradient(to bottom right, #fff3e0, #ffe0f0);
+      font-family: "Vazirmatn", sans-serif;
+      background: linear-gradient(to bottom, #ffe0f0, #ffffff);
       text-align: center;
-      color: #333;
       padding: 20px;
+      direction: rtl;
     }
-    h1,h2 { color: #d81b60; margin-bottom: 20px; }
-    .stage { display: none; padding: 40px 20px; animation: fadeIn 0.8s ease-in-out;}
-    .stage.active { display: block; }
+    h1 {
+      color: #e91e63;
+      font-size: 2.5rem;
+    }
+    .stage {
+      display: none;
+      margin-top: 40px;
+    }
     .btn {
-      background: linear-gradient(45deg,#ff4081,#f50057);
-      color: white; border: none; border-radius: 50px;
-      padding: 12px 30px; font-size: 18px; cursor: pointer;
-      margin-top: 20px; transition: background 0.3s;
+      background-color: #e91e63;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      font-size: 1rem;
+      margin: 10px;
+      cursor: pointer;
+      border-radius: 10px;
+      transition: background 0.3s;
     }
-    .btn:hover { background: linear-gradient(45deg,#f50057,#ff4081); }
-    .letter-box {
-      margin: 5px; padding: 12px 20px;
-      background: white; border-radius: 12px;
-      box-shadow: 0 3px 8px rgba(0,0,0,0.1);
-      font-size: 22px; cursor: pointer;
-      transition: transform .2s, background .3s;
+    .btn:hover {
+      background-color: #d81b60;
+    }
+    .letter {
       display: inline-block;
+      border: 2px solid #e91e63;
+      padding: 10px;
+      margin: 5px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 20px;
     }
-    .letter-box:hover { transform: scale(1.1); background: #fce4ec; }
-    .cups { display:flex; justify-content:center; gap:40px; margin-top:30px; }
-    .cup {
-      width:80px;height:120px;
-      background:#795548; border-radius:0 0 40px 40px;
-      position:relative; cursor:pointer; transition: background .3s;
+    .selected {
+      background-color: #f8bbd0;
     }
-    .cup:hover { background:#5d4037; }
-    .ball { width:30px;height:30px;background:red;
-      border-radius:50%;position:absolute;bottom:-35px;left:25px;
-    }
-    img.gif {
-      max-width:300px; border-radius:16px;
-      box-shadow:0 5px 15px rgba(0,0,0,0.1);
-      margin:20px auto; display:block;
-    }
-    @keyframes fadeIn {
-      from { opacity:0; transform:translateY(20px) }
-      to { opacity:1; transform:translateY(0) }
+    .gif {
+      width: 300px;
+      margin: 20px auto;
     }
   </style>
 </head>
 <body>
+  <h1>🎉 تولدت مبارک رویا 🎉</h1>
 
-  <audio id="music1" src="Music1.mp3" autoplay loop></audio>
-  <audio id="music2" src="Music2.mp3"></audio>
+  <div id="stage1" class="stage" style="display:block;">
+    <h2>نام خود را وارد کنید:</h2>
+    <div id="letters">
+      <!-- حروف الفبا فارسی -->
+    </div>
+    <p id="selectedName" style="font-size:20px;"></p>
+    <button id="toStage2" class="btn" style="display:none;">برو به مرحله بعد</button>
+    <button onclick="resetName()" class="btn" style="background:#f44336;">پاک کن</button>
+  </div>
 
-  <h1>🎉 خوش آمدی Roya جان!</h1>
+  <div id="stage2" class="stage">
+    <h2>بازی چراغ‌ها 💡</h2>
+    <p>روی چراغ‌ها کلیک کن تا همه‌شون روشن بشن!</p>
+    <div id="lightsContainer" style="display:flex; justify-content:center; gap:20px; flex-wrap:wrap; margin:30px;"></div>
+    <button id="toStage3" class="btn" style="display:none;">برو به مرحله ۳</button>
+  </div>
 
-  <section id="stage1" class="stage active">
-    <h2>لطفاً نام خود را وارد کن</h2>
-    <div id="letters1"></div>
-    <p id="nameOutput" style="font-size:24px; margin:20px;"></p>
-    <button id="toStage2" class="btn" style="display:none">ادامه</button>
-  </section>
-
-  <section id="stage2" class="stage">
-    <h2>توپ رو دنبال کن 🎩</h2>
-    <img class="gif" src="https://dl.glitter-graphics.com/pub/2913/2913265fu2ygqeddb.gif" alt="بازی لیوان">
-    <div id="cupsContainer" class="cups"></div>
-    <button id="toStage3" class="btn" style="display:none">مرحله ۳</button>
-  </section>
-
-  <section id="stage3" class="stage">
-    <h2>معما: کدام کلید هیچ دری را باز نمی‌کند؟</h2>
-    <div id="letters3"></div>
-    <p id="answerText" style="font-size:24px; margin:20px;"></p>
+  <div id="stage3" class="stage">
+    <h2>معما 🧠</h2>
+    <p>کدام کلید است که هیچ دری را باز نمی‌کند؟</p>
+    <div id="puzzleLetters"></div>
+    <p id="selectedPuzzle" style="font-size:20px;"></p>
     <img class="gif" src="https://media.gifdb.com/blue-haired-anime-girl-dancing-2zc3cgush44nid16.gif" alt="معما">
-    <button id="toStage4" class="btn" style="display:none">مرحله آخر</button>
-  </section>
+    <button id="toStage4" class="btn" style="display:none;">🎉 رفتن به مرحله آخر</button>
+    <button onclick="resetPuzzle()" class="btn" style="background:#f44336;">پاک کن</button>
+  </div>
 
-  <section id="stage4" class="stage">
-    <h2>🎂 تولدت مبارک Roya خانم!</h2>
-    <img class="gif" src="https://cliply.co/wp-content/uploads/2021/02/392102670_BIRTHDAY_CAKE_400px.gif" alt="کیک تولد">
-    <p style="font-size:20px; margin-top:20px;">🎉 از طرف یک دوست با محبت 💖</p>
-  </section>
+  <div id="stage4" class="stage">
+    <h2>🎂 تولدت مبارک رویا جان 🎂</h2>
+    <img class="gif" src="https://cliply.co/wp-content/uploads/2021/02/392102670_BIRTHDAY_CAKE_400px.gif" alt="تولد">
+    <p style="font-size:22px; margin-top:20px;">با آرزوی بهترین‌ها برای تو 🌟</p>
+  </div>
 
   <script>
-    const stages = ["stage1","stage2","stage3","stage4"];
-    const target = "رویا", alphabet = [..."اآبپتثجچحخدذرزژسشصضطظعغفقکگلمنوهی"];
-    const answerSeq = ["ک","ل","ی","د","ب","ر","ق"];
+    let userName = "", puzzleInput = "";
+    const answerName = "رویا";
+    const answerPuzzle = "کلیدبرق";
+    const letters = "آابپتثجچحخدذرزژسشصضطظعغفقکگلمنوهی".split("");
 
-    let nameInput="", answerInput=[], ballIndex=Math.floor(Math.random()*3);
+    const music1 = new Audio("Music1.mp3");
+    const music2 = new Audio("Music2.mp3");
+    music1.loop = true;
+    music2.loop = true;
 
-    const show = id=>{
-      stages.forEach(s=>document.getElementById(s).classList.remove("active"));
-      document.getElementById(id).classList.add("active");
-    };
-
-    function renderLetters(divId, cb){
-      const cont=document.getElementById(divId);
-      cont.innerHTML="";
-      alphabet.forEach(l=>{
-        let box=document.createElement("div");
-        box.className="letter-box";
-        box.textContent=l;
-        box.onclick=()=>cb(l);
-        cont.appendChild(box);
-      });
+    function show(id) {
+      document.querySelectorAll(".stage").forEach(s => s.style.display = "none");
+      document.getElementById(id).style.display = "block";
     }
 
-    renderLetters("letters1", l=>{
-      nameInput+=l;
-      document.getElementById("nameOutput").innerText=nameInput;
-      if(nameInput===target) document.getElementById("toStage2").style.display="inline-block";
+    // ساخت حروف برای مرحله ۱
+    const letterDiv = document.getElementById("letters");
+    letters.forEach(l => {
+      const span = document.createElement("span");
+      span.textContent = l;
+      span.className = "letter";
+      span.onclick = () => {
+        userName += l;
+        document.getElementById("selectedName").textContent = userName;
+        if (userName === answerName) {
+          document.getElementById("toStage2").style.display = "inline-block";
+        }
+      };
+      letterDiv.appendChild(span);
     });
 
-    document.getElementById("toStage2").onclick=()=>{
+    // دکمه پاک کردن نام
+    function resetName() {
+      userName = "";
+      document.getElementById("selectedName").textContent = "";
+      document.getElementById("toStage2").style.display = "none";
+    }
+
+    // بازی چراغ‌ها
+    document.getElementById("toStage2").onclick = () => {
       show("stage2");
-      const cupCont=document.getElementById("cupsContainer");
-      cupCont.innerHTML="";
-      for(let i=0;i<3;i++){
-        let cup=document.createElement("div");
-        cup.className="cup";
-        cup.onclick=()=>{
-          if(i===ballIndex){
-            cup.innerHTML='<div class="ball"></div>';
-            document.getElementById("toStage3").style.display="inline-block";
-          } else alert("اشتباه بود، دوباره تلاش کن!");
+      music1.play();
+
+      const lightsCont = document.getElementById("lightsContainer");
+      lightsCont.innerHTML = "";
+      const lights = [];
+      for (let i = 0; i < 6; i++) {
+        let light = document.createElement("div");
+        light.style.width = "60px";
+        light.style.height = "60px";
+        light.style.borderRadius = "50%";
+        light.style.background = "#999";
+        light.style.cursor = "pointer";
+        light.onclick = () => {
+          light.style.background = "#ffeb3b";
+          lights[i] = true;
+          if (lights.filter(Boolean).length === 6) {
+            document.getElementById("toStage3").style.display = "inline-block";
+          }
         };
-        cupCont.appendChild(cup);
+        lightsCont.appendChild(light);
+        lights.push(false);
       }
     };
 
-    document.getElementById("toStage3").onclick=()=>{
+    document.getElementById("toStage3").onclick = () => {
       show("stage3");
-      renderLetters("letters3", l=>{
-        answerInput.push(l);
-        document.getElementById("answerText").innerText=answerInput.join("");
-        if(answerInput.join("")===answerSeq.join("")) document.getElementById("toStage4").style.display="inline-block";
+
+      // ساخت حروف معما
+      const puzzleDiv = document.getElementById("puzzleLetters");
+      puzzleDiv.innerHTML = "";
+      const shuffled = [...letters].sort(() => 0.5 - Math.random());
+      shuffled.forEach(l => {
+        const span = document.createElement("span");
+        span.textContent = l;
+        span.className = "letter";
+        span.onclick = () => {
+          puzzleInput += l;
+          document.getElementById("selectedPuzzle").textContent = puzzleInput;
+          if (puzzleInput === answerPuzzle) {
+            document.getElementById("toStage4").style.display = "inline-block";
+          }
+        };
+        puzzleDiv.appendChild(span);
       });
     };
 
-    document.getElementById("toStage4").onclick=()=>{
+    // دکمه پاک کردن معما
+    function resetPuzzle() {
+      puzzleInput = "";
+      document.getElementById("selectedPuzzle").textContent = "";
+      document.getElementById("toStage4").style.display = "none";
+    }
+
+    document.getElementById("toStage4").onclick = () => {
+      music1.pause();
+      music2.play();
       show("stage4");
-      document.getElementById("music1").pause();
-      document.getElementById("music2").play();
     };
   </script>
 </body>
