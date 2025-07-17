@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+  <meta charset="UTF-8">
+  <title>🎁 هدیه تولد Roya</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0 }
+    body {
+      font-family: 'Vazirmatn', sans-serif;
+      background: linear-gradient(to bottom right, #fff3e0, #ffe0f0);
+      text-align: center;
+      color: #333;
+      padding: 20px;
+    }
+    h1,h2 { color: #d81b60; margin-bottom: 20px; }
+    .stage { display: none; padding: 40px 20px; animation: fadeIn 0.8s ease-in-out;}
+    .stage.active { display: block; }
+    .btn {
+      background: linear-gradient(45deg,#ff4081,#f50057);
+      color: white; border: none; border-radius: 50px;
+      padding: 12px 30px; font-size: 18px; cursor: pointer;
+      margin-top: 20px; transition: background 0.3s;
+    }
+    .btn:hover { background: linear-gradient(45deg,#f50057,#ff4081); }
+    .letter-box {
+      margin: 5px; padding: 12px 20px;
+      background: white; border-radius: 12px;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+      font-size: 22px; cursor: pointer;
+      transition: transform .2s, background .3s;
+      display: inline-block;
+    }
+    .letter-box:hover { transform: scale(1.1); background: #fce4ec; }
+    .cups { display:flex; justify-content:center; gap:40px; margin-top:30px; }
+    .cup {
+      width:80px;height:120px;
+      background:#795548; border-radius:0 0 40px 40px;
+      position:relative; cursor:pointer; transition: background .3s;
+    }
+    .cup:hover { background:#5d4037; }
+    .ball { width:30px;height:30px;background:red;
+      border-radius:50%;position:absolute;bottom:-35px;left:25px;
+    }
+    img.gif {
+      max-width:300px; border-radius:16px;
+      box-shadow:0 5px 15px rgba(0,0,0,0.1);
+      margin:20px auto; display:block;
+    }
+    @keyframes fadeIn {
+      from { opacity:0; transform:translateY(20px) }
+      to { opacity:1; transform:translateY(0) }
+    }
+  </style>
+</head>
+<body>
+
+  <audio id="music1" src="Music1.mp3" autoplay loop></audio>
+  <audio id="music2" src="Music2.mp3"></audio>
+
+  <h1>🎉 خوش آمدی Roya جان!</h1>
+
+  <section id="stage1" class="stage active">
+    <h2>لطفاً نام خود را وارد کن</h2>
+    <div id="letters1"></div>
+    <p id="nameOutput" style="font-size:24px; margin:20px;"></p>
+    <button id="toStage2" class="btn" style="display:none">ادامه</button>
+  </section>
+
+  <section id="stage2" class="stage">
+    <h2>توپ رو دنبال کن 🎩</h2>
+    <img class="gif" src="https://dl.glitter-graphics.com/pub/2913/2913265fu2ygqeddb.gif" alt="بازی لیوان">
+    <div id="cupsContainer" class="cups"></div>
+    <button id="toStage3" class="btn" style="display:none">مرحله ۳</button>
+  </section>
+
+  <section id="stage3" class="stage">
+    <h2>معما: کدام کلید هیچ دری را باز نمی‌کند؟</h2>
+    <div id="letters3"></div>
+    <p id="answerText" style="font-size:24px; margin:20px;"></p>
+    <img class="gif" src="https://media.gifdb.com/blue-haired-anime-girl-dancing-2zc3cgush44nid16.gif" alt="معما">
+    <button id="toStage4" class="btn" style="display:none">مرحله آخر</button>
+  </section>
+
+  <section id="stage4" class="stage">
+    <h2>🎂 تولدت مبارک Roya خانم!</h2>
+    <img class="gif" src="https://cliply.co/wp-content/uploads/2021/02/392102670_BIRTHDAY_CAKE_400px.gif" alt="کیک تولد">
+    <p style="font-size:20px; margin-top:20px;">🎉 از طرف یک دوست با محبت 💖</p>
+  </section>
+
+  <script>
+    const stages = ["stage1","stage2","stage3","stage4"];
+    const target = "رویا", alphabet = [..."اآبپتثجچحخدذرزژسشصضطظعغفقکگلمنوهی"];
+    const answerSeq = ["ک","ل","ی","د","ب","ر","ق"];
+
+    let nameInput="", answerInput=[], ballIndex=Math.floor(Math.random()*3);
+
+    const show = id=>{
+      stages.forEach(s=>document.getElementById(s).classList.remove("active"));
+      document.getElementById(id).classList.add("active");
+    };
+
+    function renderLetters(divId, cb){
+      const cont=document.getElementById(divId);
+      cont.innerHTML="";
+      alphabet.forEach(l=>{
+        let box=document.createElement("div");
+        box.className="letter-box";
+        box.textContent=l;
+        box.onclick=()=>cb(l);
+        cont.appendChild(box);
+      });
+    }
+
+    renderLetters("letters1", l=>{
+      nameInput+=l;
+      document.getElementById("nameOutput").innerText=nameInput;
+      if(nameInput===target) document.getElementById("toStage2").style.display="inline-block";
+    });
+
+    document.getElementById("toStage2").onclick=()=>{
+      show("stage2");
+      const cupCont=document.getElementById("cupsContainer");
+      cupCont.innerHTML="";
+      for(let i=0;i<3;i++){
+        let cup=document.createElement("div");
+        cup.className="cup";
+        cup.onclick=()=>{
+          if(i===ballIndex){
+            cup.innerHTML='<div class="ball"></div>';
+            document.getElementById("toStage3").style.display="inline-block";
+          } else alert("اشتباه بود، دوباره تلاش کن!");
+        };
+        cupCont.appendChild(cup);
+      }
+    };
+
+    document.getElementById("toStage3").onclick=()=>{
+      show("stage3");
+      renderLetters("letters3", l=>{
+        answerInput.push(l);
+        document.getElementById("answerText").innerText=answerInput.join("");
+        if(answerInput.join("")===answerSeq.join("")) document.getElementById("toStage4").style.display="inline-block";
+      });
+    };
+
+    document.getElementById("toStage4").onclick=()=>{
+      show("stage4");
+      document.getElementById("music1").pause();
+      document.getElementById("music2").play();
+    };
+  </script>
+</body>
+</html>
