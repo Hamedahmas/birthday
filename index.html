@@ -1,258 +1,267 @@
 <!DOCTYPE html>
 <html lang="fa">
 <head>
-  <meta charset="UTF-8">
-  <title>هدیه به رویا</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>هدیه تولد رویا</title>
   <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&display=swap" rel="stylesheet">
   <style>
     body {
+      margin: 0;
       font-family: 'Vazirmatn', sans-serif;
-      background: linear-gradient(to top right, #f8bbd0, #e1bee7);
+      background: linear-gradient(to bottom right, #ffecf0, #e3f2fd);
       color: #4a148c;
       text-align: center;
-      padding: 30px;
       direction: rtl;
     }
-    .hidden { display: none; }
-    h2 { font-size: 2rem; margin-bottom: 10px; }
-    .btn {
-      font-family: inherit;
-      padding: 10px 20px;
-      margin: 5px;
-      font-size: 18px;
+    h2, p {
+      margin: 20px 10px;
+      font-size: 1.2rem;
+    }
+    .section {
+      padding: 24px;
+      display: none;
+    }
+    .active {
+      display: block;
+    }
+    button {
+      padding: 14px 24px;
+      font-size: 16px;
+      margin: 10px;
       border: none;
-      border-radius: 8px;
-      background-color: #7e57c2;
-      color: white;
-      cursor: pointer;
-      transition: 0.3s;
-    }
-    .btn:hover { background-color: #5e35b1; }
-    .gif {
-      margin-top: 15px;
-      width: 200px;
       border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      background: #8e24aa;
+      color: #fff;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      transition: background 0.3s;
     }
-    .light-container {
+    button:hover {
+      background: #6a1b9a;
+    }
+    .char-buttons {
       display: flex;
+      flex-wrap: wrap;
       justify-content: center;
-      gap: 20px;
-      margin: 30px 0;
+      gap: 10px;
+      margin: 10px 0;
+    }
+    .char-buttons button {
+      min-width: 50px;
+      background: #fce4ec;
+      color: #880e4f;
+    }
+    .light-box {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+      margin: 20px auto;
     }
     .light {
       width: 60px;
       height: 60px;
       border-radius: 50%;
-      border: 3px solid #fff;
-      cursor: pointer;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-      transition: box-shadow 0.3s;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+      border: 2px solid white;
     }
-    #letterChoices button {
-      background-color: #fce4ec;
-      color: #880e4f;
+    .gif {
+      width: 90%;
+      max-width: 320px;
+      border-radius: 12px;
+      margin: 20px auto;
+    }
+    #selectedName, #selectedRiddle {
+      font-size: 22px;
       font-weight: bold;
-    }
-    #selectedLetters {
-      font-size: 24px;
       margin: 10px;
-      font-weight: bold;
     }
   </style>
 </head>
 <body>
+
+  <!-- موسیقی -->
   <audio id="music1" src="Music1.mp3" loop></audio>
   <audio id="music2" src="Music2.mp3" loop></audio>
 
-  <!-- Step 1: Name -->
-  <div id="step1">
-    <h2>نامت را بساز</h2>
-    <div id="nameButtons"></div>
-    <div id="nameDisplay"></div>
-    <button class="btn" onclick="checkBuiltName()">ادامه</button>
-    <button class="btn" style="background:#e53935;" onclick="resetName()">پاک کن</button>
-    <br>
-    <img class="gif" src="https://media.tenor.com/mwzLh4Sr5GkAAAAC/anime-girl-happy.gif" />
+  <!-- مرحله ۱ -->
+  <div id="step1" class="section active">
+    <h2>نام خودت رو از بین حروف بساز</h2>
+    <p>برای ادامه باید اسم «رویا» رو بسازی</p>
+    <div class="char-buttons" id="nameButtons"></div>
+    <div id="selectedName"></div>
+    <button onclick="clearName()">پاک کن</button>
+    <button onclick="checkName()">ادامه</button>
   </div>
 
-  <!-- Step 2: Lights Game -->
-  <div id="step2" class="hidden">
-    <h2>ترتیب روشن شدن چراغ‌ها را بخاطر بسپار</h2>
-    <div class="light-container" id="lights"></div>
-    <div class="hidden" id="guessArea">
-      <p>با کلیک بر چراغ‌ها به ترتیب روشنی را حدس بزن:</p>
-      <div class="light-container" id="guessLights"></div>
+  <!-- مرحله ۲ -->
+  <div id="step2" class="section">
+    <h2>ترتیب چراغ‌ها رو به‌خاطر بسپار</h2>
+    <img class="gif" src="https://dl.glitter-graphics.com/pub/2913/2913265fu2ygqeddb.gif" />
+    <div class="light-box" id="lights"></div>
+    <div id="guessArea" style="display:none;">
+      <p>حالا به ترتیب کلیک کن</p>
+      <div class="light-box" id="guessLights"></div>
     </div>
   </div>
 
-  <!-- Step 3: Riddle -->
-  <div id="step3" class="hidden">
-    <h2>کدام کلید است که هیچ دری را باز نمی‌کند؟</h2>
-    <p>حروف را انتخاب کن تا جواب بسازی:</p>
-    <div id="letterChoices"></div>
-    <div id="selectedLetters"></div>
-    <button class="btn" onclick="checkRiddleAnswer()">بررسی</button>
-    <button class="btn" style="background:#e53935;" onclick="startRiddle()">پاک کن</button>
-    <br>
-    <img class="gif" src="https://media.gifdb.com/blue-haired-anime-girl-dancing-2zc3cgush44nid16.gif">
+  <!-- مرحله ۳ -->
+  <div id="step3" class="section">
+    <h2>کدام کلید هیچ دری را باز نمی‌کند؟</h2>
+    <img class="gif" src="https://media.gifdb.com/blue-haired-anime-girl-dancing-2zc3cgush44nid16.gif" />
+    <p>با انتخاب حروف، جواب رو بساز</p>
+    <div class="char-buttons" id="riddleButtons"></div>
+    <div id="selectedRiddle"></div>
+    <button onclick="clearRiddle()">پاک کن</button>
+    <button onclick="checkRiddle()">بررسی جواب</button>
   </div>
 
-  <!-- Step 4: Birthday Final -->
-  <div id="step4" class="hidden">
-    <h2>تولدت مبارک رویای عزیز! 🎂</h2>
-    <img class="gif" src="https://cliply.co/wp-content/uploads/2021/02/392102670_BIRTHDAY_CAKE_400px.gif">
+  <!-- مرحله ۴ -->
+  <div id="step4" class="section">
+    <h2>🎉 رویا جون تولدت مبارک 🎉</h2>
+    <img class="gif" src="https://cliply.co/wp-content/uploads/2021/02/392102670_BIRTHDAY_CAKE_400px.gif" />
+    <p>با آرزوی بهترین‌ها برای تو 💖</p>
   </div>
 
   <script>
-    const COLORS = ["yellow", "red", "blue", "green", "brown", "orange"];
-    const LIGHT_COUNT = 6;
-    const SEQUENCE_LENGTH = 5;
-    let lights = [], sequence = [], userGuess = [];
-    const music1 = document.getElementById("music1");
-    const music2 = document.getElementById("music2");
+    // متغیرها
+    const nameTarget = "رویا";
+    const riddleAnswer = "کلیدبرق";
+    const nameInput = [];
+    const riddleInput = [];
+    const sequence = [], guess = [];
 
-    const nameLetters = ["ر", "و", "ی", "ا"];
-    let builtName = [];
+    const colors = ["red", "yellow", "green", "blue", "orange", "purple"];
+    const lightsLength = 5;
 
-    function initNameButtons() {
-      const container = document.getElementById("nameButtons");
-      container.innerHTML = "";
-      builtName = [];
-      updateNameDisplay();
-      nameLetters.forEach(char => {
-        const btn = document.createElement("button");
-        btn.textContent = char;
-        btn.className = "btn";
-        btn.onclick = () => {
-          builtName.push(char);
-          updateNameDisplay();
-        };
-        container.appendChild(btn);
-      });
+    // ساخت حروف مرحله ۱
+    const nameButtons = document.getElementById("nameButtons");
+    [...nameTarget, "ا", "ل", "م", "ن"].sort(() => 0.5 - Math.random()).forEach(ch => {
+      const btn = document.createElement("button");
+      btn.textContent = ch;
+      btn.onclick = () => {
+        nameInput.push(ch);
+        document.getElementById("selectedName").textContent = nameInput.join('');
+      };
+      nameButtons.appendChild(btn);
+    });
+
+    function clearName() {
+      nameInput.length = 0;
+      document.getElementById("selectedName").textContent = "";
     }
 
-    function updateNameDisplay() {
-      document.getElementById("nameDisplay").textContent = builtName.join("");
-    }
-
-    function resetName() {
-      builtName = [];
-      updateNameDisplay();
-    }
-
-    function checkBuiltName() {
-      const name = builtName.join("");
-      if (name === "رویا") {
-        document.getElementById("step1").classList.add("hidden");
-        document.getElementById("step2").classList.remove("hidden");
-        startLightGame();
-        music1.play();
+    function checkName() {
+      if (nameInput.join('') === nameTarget) {
+        showStep(2);
+        document.getElementById("music1").play();
+        startLightsGame();
       } else {
-        alert("فقط رویا اجازه دارد وارد شود!");
-        resetName();
+        alert("فقط رویا اجازه ورود دارد!");
+        clearName();
       }
     }
 
-    function startLightGame() {
-      const lightsContainer = document.getElementById("lights");
-      const guessLightsContainer = document.getElementById("guessLights");
+    // مرحله ۲
+    function startLightsGame() {
+      const lightBox = document.getElementById("lights");
+      const guessBox = document.getElementById("guessLights");
       const guessArea = document.getElementById("guessArea");
+      lightBox.innerHTML = "";
+      guessBox.innerHTML = "";
+      sequence.length = 0;
+      guess.length = 0;
+      guessArea.style.display = "none";
 
-      lightsContainer.innerHTML = "";
-      lights = [];
-      for (let i = 0; i < LIGHT_COUNT; i++) {
-        const light = document.createElement("div");
-        light.classList.add("light");
-        light.style.backgroundColor = COLORS[i];
-        lightsContainer.appendChild(light);
-        lights.push(light);
-      }
+      colors.forEach(color => {
+        const div = document.createElement("div");
+        div.className = "light";
+        div.style.backgroundColor = color;
+        lightBox.appendChild(div);
+      });
 
-      sequence = [];
       let count = 0;
       const interval = setInterval(() => {
-        const index = Math.floor(Math.random() * LIGHT_COUNT);
-        sequence.push(index);
-        lights[index].style.boxShadow = `0 0 20px 10px ${COLORS[index]}`;
-        setTimeout(() => {
-          lights[index].style.boxShadow = "none";
-        }, 400);
+        const rand = Math.floor(Math.random() * colors.length);
+        sequence.push(rand);
+        const light = lightBox.children[rand];
+        light.style.boxShadow = `0 0 20px 8px ${colors[rand]}`;
+        setTimeout(() => light.style.boxShadow = '', 400);
         count++;
-        if (count >= SEQUENCE_LENGTH) {
+        if (count >= lightsLength) {
           clearInterval(interval);
-          setTimeout(() => {
-            guessArea.classList.remove("hidden");
-            guessLightsContainer.innerHTML = "";
-            userGuess = [];
-            for (let i = 0; i < LIGHT_COUNT; i++) {
-              const guessLight = document.createElement("div");
-              guessLight.classList.add("light");
-              guessLight.style.backgroundColor = COLORS[i];
-              guessLight.dataset.index = i;
-              guessLight.onclick = () => {
-                userGuess.push(i);
-                guessLight.style.boxShadow = `0 0 20px 10px ${COLORS[i]}`;
-                setTimeout(() => {
-                  guessLight.style.boxShadow = "none";
-                }, 300);
-                if (userGuess.length === SEQUENCE_LENGTH) checkLightAnswer();
-              };
-              guessLightsContainer.appendChild(guessLight);
-            }
-          }, 500);
+          setTimeout(showGuessLights, 600);
         }
       }, 700);
     }
 
-    function checkLightAnswer() {
-      for (let i = 0; i < SEQUENCE_LENGTH; i++) {
-        if (sequence[i] !== userGuess[i]) {
-          alert("اشتباه بود! دوباره تلاش کن");
-          document.getElementById("guessArea").classList.add("hidden");
-          startLightGame();
-          return;
-        }
-      }
-      alert("آفرین درست گفتی!");
-      document.getElementById("step2").classList.add("hidden");
-      document.getElementById("step3").classList.remove("hidden");
-      startRiddle();
-    }
+    function showGuessLights() {
+      const box = document.getElementById("guessLights");
+      const guessArea = document.getElementById("guessArea");
+      box.innerHTML = "";
+      guess.length = 0;
+      guessArea.style.display = "block";
 
-    function startRiddle() {
-      const letters = "ک ل ی د ب ر ق".split(" ");
-      const all = letters.concat(["آ","ت","ن","و","ا","ف","ج","ح","ص"]);
-      all.sort(() => Math.random() - 0.5);
-      const letterChoices = document.getElementById("letterChoices");
-      const selectedLetters = document.getElementById("selectedLetters");
-      letterChoices.innerHTML = "";
-      selectedLetters.innerHTML = "";
-      const answer = [];
-      all.forEach(char => {
-        const btn = document.createElement("button");
-        btn.textContent = char;
+      colors.forEach((color, i) => {
+        const btn = document.createElement("div");
+        btn.className = "light";
+        btn.style.backgroundColor = color;
         btn.onclick = () => {
-          answer.push(char);
-          selectedLetters.textContent = answer.join("");
+          guess.push(i);
+          btn.style.boxShadow = `0 0 15px 5px ${color}`;
+          setTimeout(() => btn.style.boxShadow = '', 300);
+          if (guess.length === lightsLength) {
+            checkLights();
+          }
         };
-        letterChoices.appendChild(btn);
+        box.appendChild(btn);
       });
-      window.checkRiddleAnswer = function() {
-        if (answer.join("") === "کلیدبرق") {
-          alert("آفرین! جواب درست بود");
-          document.getElementById("step3").classList.add("hidden");
-          document.getElementById("step4").classList.remove("hidden");
-          music1.pause();
-          music2.play();
-        } else {
-          alert("اشتباه بود! دوباره امتحان کن");
-          startRiddle();
-        }
+    }
+
+    function checkLights() {
+      if (sequence.join() === guess.join()) {
+        document.getElementById("music1").pause();
+        showStep(3);
+      } else {
+        alert("اشتباه بود! دوباره تلاش کن");
+        startLightsGame();
       }
     }
 
-    window.onload = initNameButtons;
+    // مرحله ۳
+    const allChars = [...riddleAnswer, 'و','ه','ن','ف','ص','ق','م'].sort(() => 0.5 - Math.random());
+    const riddleButtons = document.getElementById("riddleButtons");
+    allChars.forEach(ch => {
+      const btn = document.createElement("button");
+      btn.textContent = ch;
+      btn.onclick = () => {
+        riddleInput.push(ch);
+        document.getElementById("selectedRiddle").textContent = riddleInput.join('');
+      };
+      riddleButtons.appendChild(btn);
+    });
+
+    function clearRiddle() {
+      riddleInput.length = 0;
+      document.getElementById("selectedRiddle").textContent = "";
+    }
+
+    function checkRiddle() {
+      if (riddleInput.join('') === riddleAnswer) {
+        document.getElementById("music2").play();
+        showStep(4);
+      } else {
+        alert("اشتباه بود. دوباره تلاش کن.");
+        clearRiddle();
+      }
+    }
+
+    // مدیریت مراحل
+    function showStep(n) {
+      document.querySelectorAll(".section").forEach(s => s.classList.remove("active"));
+      document.getElementById("step" + n).classList.add("active");
+    }
   </script>
+
 </body>
 </html>
